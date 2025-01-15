@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysqldb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 2X0323aEk5Sk
+      MYSQL_DATABASE: placementdb
+      MYSQL_USER: kavya
+      MYSQL_PASSWORD: kavya
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  streamlit-app:
+    image: kavyar/chatapp:latest
+    container_name: streamlit-chatapp
+    restart: always
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    environment:
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+      DATABASE_USER: kavya
+      DATABASE_PASSWORD: kavya
+      DATABASE_NAME: placementdb
+
+volumes:
+  mysql_data:
+    driver: local
